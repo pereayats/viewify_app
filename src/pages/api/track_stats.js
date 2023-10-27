@@ -32,6 +32,7 @@ export default function handler(req, res) {
           (channelId, callback) => {
             // Getting channel information and uploads playlist ID
             getChannelFromDB(channelId, (error, channel) => {
+              console.log(error)
               if (error) callback('Channel not found')
               else if (channel) callback(null, channel)
               else {
