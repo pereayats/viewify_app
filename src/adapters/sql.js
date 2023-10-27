@@ -7,6 +7,7 @@ const pool = mysql2.createPool({
     host: process.env.SQL_HOST,
     user: process.env.SQL_USER,
     password: process.env.SQL_PASSWORD,
+    port: 25060,
     connectionLimit: 100
 })
 
@@ -26,7 +27,6 @@ function getAllChannelsFromDB(callback) {
 }
 
 function getChannelFromDB(channelId, callback) {
-    console.log(process.env.SQL_HOST, process.env.SQL_USER)
     pool.getConnection((error, connection) => {
         if (error) callback(error)
         else {
