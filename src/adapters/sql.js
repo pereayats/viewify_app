@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const mysql2 = require('mysql2')
 const moment = require('moment')
 
@@ -24,6 +26,7 @@ function getAllChannelsFromDB(callback) {
 }
 
 function getChannelFromDB(channelId, callback) {
+    console.log(process.env.SQL_HOST, process.env.SQL_USER)
     pool.getConnection((error, connection) => {
         if (error) callback(error)
         else {

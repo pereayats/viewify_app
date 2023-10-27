@@ -1,8 +1,11 @@
+require('dotenv').config()
+
 const moment = require('moment')
 
 const BASE_API_URL = 'https://youtube.googleapis.com/youtube/v3'
 
 function getChannelByVideoId(videoId, callback) {
+    console.log(process.env.YOUTUBE_API_KEY)
     fetch(`${BASE_API_URL}/videos?id=${videoId}&part=snippet&key=${process.env.YOUTUBE_API_KEY}`)
     .then(response => {
         if (response.ok) return response.json()
