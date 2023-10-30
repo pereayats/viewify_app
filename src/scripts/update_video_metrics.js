@@ -111,5 +111,8 @@ async.waterfall([
     },
 ], (error) => {
     if (error) throw Error(error)
-    else console.log(`${moment().utc().toISOString()} - Video metrics updated`)
+    else {
+        console.log(`${moment().utc().toISOString()} - Video metrics updated`)
+        process.exit()
+    }
 })
