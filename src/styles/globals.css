@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.clip-corner {
+    -webkit-clip-path: polygon(0 0,calc(100% - 160.00px) 0,100% 160.00px,100% 100%,0 100%);
+    clip-path: polygon(0 0,calc(100% - 160.00px) 0,100% 160.00px,100% 100%,0 100%);
+}
+
+.border-clip {
+    position: relative
+}
+
+.border-clip:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #5EEAD4;
+    border-radius: 24px;
+    -webkit-clip-path: polygon(0 0,calc(100% - 90.00px) 0,100% 90.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(90.00px + 0.83px),calc(100% - 90.00px - 0.83px) 2px,2px 2px);
+    clip-path: polygon(0 0,calc(100% - 90.00px) 0,100% 90.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(90.00px + 0.83px),calc(100% - 90.00px - 0.83px) 2px,2px 2px);
+}
+
+.clip-corner-small {
+    -webkit-clip-path: polygon(0 0,calc(100% - 30.00px) 0,100% 30.00px,100% 100%,0 100%);
+    clip-path: polygon(0 0,calc(100% - 30.00px) 0,100% 30.00px,100% 100%,0 100%);
+}
+
+.border-clip-small {
+    position: relative
+}
+
+.border-clip-small:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #5EEAD4;
+    border-radius: 24px;
+    -webkit-clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(20.00px + 0.83px),calc(100% - 20.00px - 0.83px) 2px,2px 2px);
+    clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(20.00px + 0.83px),calc(100% - 20.00px - 0.83px) 2px,2px 2px);
+}
