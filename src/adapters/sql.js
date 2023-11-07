@@ -135,6 +135,22 @@ function cleanUpOldVideoStats(channelId, videoIds, callback) {
     })
 }
 
+function addEmailToWaitlist(email, callback) {
+    pool.getConnection((error, connection) => {
+        if (error) callback(error)
+        else {
+            let query = `INSERT INTO viewify.waitlist(email) VALUES ?
+                ON DUPLICATE KEY UPDATE updatedAt=CURRENT_TIMESTAMP;`
+
+            connection.query(query, [[[email]]], (error) => {
+                pool.releaseConnection(connection)
+                if (error) callback(error)
+                else callback()
+            })
+        }
+    })
+}
+
 module.exports = {
-    getAllChannelsFromDB, getChannelFromDB, insertChannels, insertVideos, insertVideoStats, deleteVideosByChannelId, cleanUpOldVideoStats
+    getAllChannelsFromDB, getChannelFromDB, insertChannels, insertVideos, insertVideoStats, deleteVideosByChannelId, cleanUpOldVideoStats, addEmailToWaitlist
 }
