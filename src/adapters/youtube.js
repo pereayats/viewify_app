@@ -40,13 +40,13 @@ function getChannelById(channelId, callback) {
                 const statistics = response.data.items[0]?.statistics;
                 const channel = {
                     id: channelId,
-                    title: channelData.title,
-                    description: channelData.description,
-                    customUrl: channelData.customUrl,
-                    publishedAt: channelData.publishedAt,
-                    thumbnail: channelData.thumbnails.default.url,
-                    country: channelData.country,
-                    uploadsPlaylistId: contentDetails.relatedPlaylists.uploads,
+                    title: channelData?.title,
+                    description: channelData?.description,
+                    customUrl: channelData?.customUrl,
+                    publishedAt: channelData?.publishedAt,
+                    thumbnail: channelData?.thumbnails?.default?.url,
+                    country: channelData?.country,
+                    uploadsPlaylistId: contentDetails?.relatedPlaylists?.uploads,
                     views: statistics?.viewCount,
                     subscribers: statistics?.subscriberCount,
                     videos: statistics?.videoCount
@@ -96,17 +96,17 @@ function getChannelsInfo(channelIds, callback) {
         .then(response => {
             if (response.data && response.data.items && response.data.items.length > 0) {
                 const channels = response.data.items.map(channel => ({
-                    id: channel.id,
-                    title: channel.snippet.title,
-                    description: channel.snippet.description,
-                    customUrl: channel.snippet.customUrl,
-                    publishedAt: channel.snippet.publishedAt,
-                    thumbnail: channel.snippet.thumbnails.default.url,
-                    country: channel.snippet.country,
-                    uploadsPlaylistId: channel.contentDetails.relatedPlaylists.uploads,
-                    views: channel.statistics?.viewCount,
-                    subscribers: channel.statistics?.subscriberCount,
-                    videos: channel.statistics?.videoCount
+                    id: channel?.id,
+                    title: channel?.snippet?.title,
+                    description: channel?.snippet?.description,
+                    customUrl: channel?.snippet?.customUrl,
+                    publishedAt: channel?.snippet?.publishedAt,
+                    thumbnail: channel?.snippet?.thumbnails?.default?.url,
+                    country: channel?.snippet?.country,
+                    uploadsPlaylistId: channel?.contentDetails?.relatedPlaylists?.uploads,
+                    views: channel?.statistics?.viewCount,
+                    subscribers: channel?.statistics?.subscriberCount,
+                    videos: channel?.statistics?.videoCount
                 }));
 
                 callback(null, channels);
@@ -133,25 +133,28 @@ function getVideosStats(videoIds, callback) {
                 const videos = response.data.items
                     .filter(video => !video.liveStreamingDetails)
                     .map(video => {
-                        const duration = moment.duration(video.contentDetails.duration);
-                        const thumbnailHD = video.snippet.thumbnails.maxres.url
-                        const thumbnailStandard = video.snippet.thumbnails.standard.url
-                        const thumbnailHigh = video.snippet.thumbnails.high.url
-                        const thumbnailMedium = video.snippet.thumbnails.medium.url
+                        const duration = moment.duration(video?.contentDetails?.duration);
+                        let thumbnailHD = video?.snippet?.thumbnails?.maxres?.url
+                        let thumbnailStandard = video?.snippet?.thumbnails?.standard?.url
+                        let thumbnailHigh = video?.snippet?.thumbnails?.high?.url
+                        let thumbnailMedium = video?.snippet?.thumbnails?.medium?.url
+                        let thumbnailDefault = video?.snippet?.thumbnails?.default?.url
+
+                        thumbnailHD = thumbnailHD ? thumbnailHD : (thumbnailStandard ? thumbnailStandard: (thumbnailHigh ? thumbnailHigh : (thumbnailMedium ? thumbnailMedium : thumbnailDefault)))
 
                         if (duration.asMilliseconds() > 60 * 1000) {
                             return {
-                                id: video.id,
-                                channelId: video.snippet.channelId,
-                                title: video.snippet.title,
-                                description: video.snippet.description,
-                                publishedAt: video.snippet.publishedAt,
-                                thumbnail: video.snippet.thumbnails.default.url,
-                                thumbnailHD: (thumbnailHD ? thumbnailHD : (thumbnailStandard ? thumbnailStandard: (thumbnailHigh ? thumbnailHigh : (thumbnailMedium ? thumbnailMedium : video.snippet.thumbnails.default.url)))),
+                                id: video?.id,
+                                channelId: video?.snippet?.channelId,
+                                title: video?.snippet?.title,
+                                description: video?.snippet?.description,
+                                publishedAt: video?.snippet?.publishedAt,
+                                thumbnail: thumbnailDefault,
+                                thumbnailHD: thumbnailHD,
                                 duration: duration.as('seconds'),
-                                views: Number(video.statistics.viewCount) || 0,
-                                likes: Number(video.statistics.likeCount) || 0,
-                                comments: Number(video.statistics.commentCount) || 0,
+                                views: Number(video?.statistics?.viewCount) || 0,
+                                likes: Number(video?.statistics?.likeCount) || 0,
+                                comments: Number(video?.statistics?.commentCount) || 0,
                             };
                         }
 
