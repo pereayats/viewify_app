@@ -41,16 +41,47 @@ function getChannelFromDB(channelId, callback) {
     })
 }
 
+function getChannelVideos(channelId, callback) {
+    pool.getConnection((error, connection) => {
+        if (error) callback(error)
+        else {
+            let query = `SELECT * FROM viewify.videos WHERE channelId = '${channelId}';`
+
+            connection.query(query, (error, result) => {
+                pool.releaseConnection(connection)
+                if (error) callback(error)
+                else callback(null, result && result.length > 0 ? result : [])
+            })
+        }
+    })
+}
+
+function getVideoAnalytics(videoId, from, to, callback) {
+    pool.getConnection((error, connection) => {
+        if (error) callback(error)
+        else {
+            let query = `SELECT * FROM viewify.video_stats WHERE id = '${videoId}'
+                AND currentTime BETWEEN '${from}' AND '${to}';`
+
+            connection.query(query, (error, result) => {
+                pool.releaseConnection(connection)
+                if (error) callback(error)
+                else callback(null, result && result.length > 0 ? result : [])
+            })
+        }
+    })
+}
+
 function insertChannels(channels, callback) {
     pool.getConnection((error, connection) => {
         if (error) callback(error)
         else {
-            let query = `INSERT INTO viewify.channels(id, title, description, customUrl, publishedAt, thumbnail, country, uploadsPlaylistId) VALUES ?
-                ON DUPLICATE KEY UPDATE title=VALUES(title), description=VALUES(description), customUrl=VALUES(customUrl), thumbnail=VALUES(thumbnail), country=VALUES(country);`
+            let query = `INSERT INTO viewify.channels(id, title, description, customUrl, publishedAt, thumbnail, country, uploadsPlaylistId, views, subscribers, videos) VALUES ?
+                ON DUPLICATE KEY UPDATE title=VALUES(title), description=VALUES(description), customUrl=VALUES(customUrl), thumbnail=VALUES(thumbnail), country=VALUES(country), views=VALUES(views), subscribers=VALUES(subscribers), videos=VALUES(videos);`
             
             let values = []
             channels.forEach(c => {
-                values.push([c.id, c.title, c.description, c.customUrl, moment(c.publishedAt).utc().format('YYYY-MM-DD HH:mm:SS'), c.thumbnail, c.country, c.uploadsPlaylistId])
+                values.push([c.id, c.title, c.description, c.customUrl, moment(c.publishedAt).utc().format('YYYY-MM-DD HH:mm:SS'), c.thumbnail, c.country, c.uploadsPlaylistId, c.views, c.subscribers, c.videos])
             })
 
             connection.query(query, [values], (error) => {
@@ -66,12 +97,12 @@ function insertVideos(videos, callback) {
     pool.getConnection((error, connection) => {
         if (error) callback(error)
         else {
-            let query = `INSERT INTO viewify.videos(id, channelId, title, description, publishedAt, thumbnail, duration, views, likes, comments) VALUES ?
-                ON DUPLICATE KEY UPDATE title=VALUES(title), description=VALUES(description), thumbnail=VALUES(thumbnail), views=VALUES(views), likes=VALUES(likes), comments=VALUES(comments);`
+            let query = `INSERT INTO viewify.videos(id, channelId, title, description, publishedAt, thumbnail, thumbnailHD, duration, views, likes, comments) VALUES ?
+                ON DUPLICATE KEY UPDATE title=VALUES(title), description=VALUES(description), thumbnail=VALUES(thumbnail), thumbnailHD=VALUES(thumbnailHD), views=VALUES(views), likes=VALUES(likes), comments=VALUES(comments);`
             
             let values = []
             videos.forEach(c => {
-                values.push([c.id, c.channelId, c.title, c.description, moment(c.publishedAt).utc().format('YYYY-MM-DD HH:mm:SS'), c.thumbnail, c.duration, c.views, c.likes, c.comments])
+                values.push([c.id, c.channelId, c.title, c.description, moment(c.publishedAt).utc().format('YYYY-MM-DD HH:mm:SS'), c.thumbnail, c.thumbnailHD, c.duration, c.views, c.likes, c.comments])
             })
 
             connection.query(query, [values], (error) => {
@@ -152,5 +183,5 @@ function addEmailToWaitlist(email, callback) {
 }
 
 module.exports = {
-    getAllChannelsFromDB, getChannelFromDB, insertChannels, insertVideos, insertVideoStats, deleteVideosByChannelId, cleanUpOldVideoStats, addEmailToWaitlist
+    getAllChannelsFromDB, getChannelFromDB, getChannelVideos, getVideoAnalytics, insertChannels, insertVideos, insertVideoStats, deleteVideosByChannelId, cleanUpOldVideoStats, addEmailToWaitlist
 }

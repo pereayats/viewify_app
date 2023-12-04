@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const moment = require('moment')
-const axios = require('axios')
+const axios = require('axios');
 
 const BASE_API_URL = 'https://youtube.googleapis.com/youtube/v3'
 
@@ -29,7 +29,7 @@ function getChannelById(channelId, callback) {
     axios.get(`${BASE_API_URL}/channels`, {
         params: {
             id: channelId,
-            part: 'snippet,contentDetails',
+            part: 'snippet,contentDetails,statistics',
             key: process.env.YOUTUBE_API_KEY,
         },
     })
@@ -37,6 +37,7 @@ function getChannelById(channelId, callback) {
             if (response.data && response.data.items && response.data.items.length > 0) {
                 const channelData = response.data.items[0].snippet;
                 const contentDetails = response.data.items[0].contentDetails;
+                const statistics = response.data.items[0]?.statistics;
                 const channel = {
                     id: channelId,
                     title: channelData.title,
@@ -46,6 +47,9 @@ function getChannelById(channelId, callback) {
                     thumbnail: channelData.thumbnails.default.url,
                     country: channelData.country,
                     uploadsPlaylistId: contentDetails.relatedPlaylists.uploads,
+                    views: statistics?.viewCount,
+                    subscribers: statistics?.subscriberCount,
+                    videos: statistics?.videoCount
                 };
 
                 callback(null, channel);
@@ -83,7 +87,7 @@ function getVideosByPlaylistId(playlistId, callback) {
 function getChannelsInfo(channelIds, callback) {
     let url = `${BASE_API_URL}/channels`;
     const params = {
-        part: 'snippet,contentDetails',
+        part: 'snippet,contentDetails,statistics',
         key: process.env.YOUTUBE_API_KEY,
         id: channelIds.join(','),
     };
@@ -100,6 +104,9 @@ function getChannelsInfo(channelIds, callback) {
                     thumbnail: channel.snippet.thumbnails.default.url,
                     country: channel.snippet.country,
                     uploadsPlaylistId: channel.contentDetails.relatedPlaylists.uploads,
+                    views: channel.statistics?.viewCount,
+                    subscribers: channel.statistics?.subscriberCount,
+                    videos: channel.statistics?.videoCount
                 }));
 
                 callback(null, channels);
@@ -127,6 +134,10 @@ function getVideosStats(videoIds, callback) {
                     .filter(video => !video.liveStreamingDetails)
                     .map(video => {
                         const duration = moment.duration(video.contentDetails.duration);
+                        const thumbnailHD = video.snippet.thumbnails.maxres.url
+                        const thumbnailStandard = video.snippet.thumbnails.standard.url
+                        const thumbnailHigh = video.snippet.thumbnails.high.url
+                        const thumbnailMedium = video.snippet.thumbnails.medium.url
 
                         if (duration.asMilliseconds() > 60 * 1000) {
                             return {
@@ -136,6 +147,7 @@ function getVideosStats(videoIds, callback) {
                                 description: video.snippet.description,
                                 publishedAt: video.snippet.publishedAt,
                                 thumbnail: video.snippet.thumbnails.default.url,
+                                thumbnailHD: (thumbnailHD ? thumbnailHD : (thumbnailStandard ? thumbnailStandard: (thumbnailHigh ? thumbnailHigh : (thumbnailMedium ? thumbnailMedium : video.snippet.thumbnails.default.url)))),
                                 duration: duration.as('seconds'),
                                 views: Number(video.statistics.viewCount) || 0,
                                 likes: Number(video.statistics.likeCount) || 0,
