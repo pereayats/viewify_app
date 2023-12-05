@@ -1,8 +1,11 @@
 import { Fragment } from 'react'
+import { useRouter } from 'next/navigation'
 import { Menu, Transition } from '@headlessui/react'
 import { UserCircle } from '@phosphor-icons/react'
 
 export default function ProfileDropdown() {
+	const router = useRouter()
+
 	return (
 		<Menu>
 			<div>
@@ -24,6 +27,7 @@ export default function ProfileDropdown() {
 						<Menu.Item>
 							{({ active }) => (
 								<button
+									onClick={() => router.replace('/api/auth/signout')}
 									className="group flex w-full items-center rounded-md px-2 py-2 text-neutral-400 text-md"
 								>
 									Log out
