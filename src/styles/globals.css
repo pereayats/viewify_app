@@ -39,3 +39,22 @@
     -webkit-clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(20.00px + 0.83px),calc(100% - 20.00px - 0.83px) 2px,2px 2px);
     clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(20.00px + 0.83px),calc(100% - 20.00px - 0.83px) 2px,2px 2px);
 }
+
+.clip-corner-small-white {
+    -webkit-clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%);
+    clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%);
+}
+
+.border-clip-small-white {
+    position: relative
+}
+
+.border-clip-small-white:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    border-radius: 24px;
+    -webkit-clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(20.00px + 0.83px),calc(100% - 20.00px - 0.83px) 2px,2px 2px);
+    clip-path: polygon(0 0,calc(100% - 20.00px) 0,100% 20.00px,100% 100%,0 100%,0 0,2px  2px ,2px calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(20.00px + 0.83px),calc(100% - 20.00px - 0.83px) 2px,2px 2px);
+}

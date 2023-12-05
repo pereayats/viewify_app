@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
+    "@phosphor-icons/react": "^2.0.14",
+    "@supabase/auth-helpers-nextjs": "^0.8.7",
+    "@supabase/supabase-js": "^2.39.0",
     "async": "^3.2.4",
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
@@ -18,7 +22,10 @@
     "mysql2": "^3.6.2",
     "next": "13.5.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-csv": "^2.2.2",
+    "react-dom": "^18",
+    "recharts": "^2.10.2",
+    "tailwind-datepicker-react": "^1.4.3"
   },
   "devDependencies": {
     "autoprefixer": "^10",
